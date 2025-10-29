@@ -12,7 +12,7 @@
     
     return {
     plugins: [react()],
-    base: process.env.VITE_BASE_PATH || "/",
+    base: process.env.VITE_BASE_PATH || "/PC-Builder-Welcome-Screen--1-",
     define: {
       'process.env.VITE_OPENAI_API_KEY': JSON.stringify(process.env.VITE_OPENAI_API_KEY),
     },
