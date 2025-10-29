@@ -12,6 +12,7 @@
     
     return {
     plugins: [react()],
+    base: process.env.VITE_BASE_PATH || "/",
     define: {
       'process.env.VITE_OPENAI_API_KEY': JSON.stringify(process.env.VITE_OPENAI_API_KEY),
     },
