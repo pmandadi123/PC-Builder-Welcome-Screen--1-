@@ -10,8 +10,20 @@
     console.log('Loading environment variables...');
     console.log('VITE_OPENAI_API_KEY exists:', !!env.VITE_OPENAI_API_KEY);
     
+    // small plugin to resolve Vite's optional-peer-dep virtual ids for
+    // next/navigation used by some packages (e.g. @vercel/analytics)
+    const nextNavShimPlugin = {
+      name: 'vite:next-navigation-shim',
+      resolveId(id) {
+        if (typeof id === 'string' && id.startsWith('__vite-optional-peer-dep:next/navigation')) {
+          return path.resolve(__dirname, './src/shims/next-navigation.ts');
+        }
+        return null;
+      }
+    };
+
     return {
-    plugins: [react()],
+    plugins: [nextNavShimPlugin, react()],
     base: process.env.VITE_BASE_PATH || "/PC-Builder-Welcome-Screen--1-",
     define: {
       'process.env.VITE_OPENAI_API_KEY': JSON.stringify(process.env.VITE_OPENAI_API_KEY),
@@ -19,6 +31,22 @@
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
+        // Provide a lightweight shim for Next.js client navigation hooks used
+        // by some libraries (e.g. @vercel/analytics) so Vite builds don't fail.
+  'next/navigation': path.resolve(__dirname, './src/shims/next-navigation.ts'),
+  'next/navigation.js': path.resolve(__dirname, './src/shims/next-navigation.ts'),
+        // Vite may create virtual optional-peer-dep import ids for Next.js when
+        // packages like @vercel/analytics declare Next as an optional peer.
+        // Alias those virtual ids to our shim so Rollup can statically analyze
+        // and bundle the library without errors.
+        '__vite-optional-peer-dep:next/navigation.js:@vercel/analytics': path.resolve(
+          __dirname,
+          './src/shims/next-navigation.ts'
+        ),
+        '__vite-optional-peer-dep:next/navigation:@vercel/analytics': path.resolve(
+          __dirname,
+          './src/shims/next-navigation.ts'
+        ),
         'vaul@1.1.2': 'vaul',
         'sonner@2.0.3': 'sonner',
         'recharts@2.15.2': 'recharts',
