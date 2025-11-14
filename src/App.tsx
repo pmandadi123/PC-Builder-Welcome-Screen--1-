@@ -9,7 +9,7 @@ import { motion } from "motion/react";
 import { Monitor, Cpu, HardDrive, Zap, DollarSign, CheckCircle, ArrowRight, ArrowLeft, Sparkles, MemoryStick, CircuitBoard, Plug, Box, Wind, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import AIRecommendationChat from "./components/AIRecommendationChat";
-
+import { Analytics } from '@vercel/analytics/next';
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<"welcome" | "budget" | "components" | "cpu" | "gpu" | "motherboard" | "ram" | "storage" | "psu" | "case" | "cooler" | "summary">("welcome");
   const [budget, setBudget] = useState("");
@@ -1938,6 +1938,7 @@ export default function App() {
     return (
       <div className="min-h-screen relative overflow-hidden">
         {/* Gradient Background */}
+        <Analytics />
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-blue-50" />
         
         {/* Hero Background Image */}
